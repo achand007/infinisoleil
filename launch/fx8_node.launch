@@ -1,0 +1,33 @@
+<launch>
+  <arg name="node" value="fx8_node"/>
+
+  <arg name="hostname" default="192.168.0.80"/>
+  <arg name="port_number" default="50000"/>
+  <arg name="range_frame_id" default="range_image"/>
+  <arg name="ir_frame_id" default="ir_image"/>
+  <arg name="point_cloud_frame_id" default="point_cloud"/>
+  <arg name="connect_timeout" default="10000"/>
+  <arg name="send_timeout" default="3000"/>
+  <arg name="receive_timeout" default="5000"/>
+  <arg name="measure_mode" default="0"/>
+  <arg name="diagnostics_enable" default="true"/>
+
+  <node pkg="infinisoleil"
+        type="fx8_node"
+        name="$(arg node)"
+        output="screen">
+    <remap from="range_image" to="$(arg node)/range_image"/>
+    <remap from="ir_image" to="$(arg node)/ir_image"/>
+    <remap from="point_cloud" to="$(arg node)/point_cloud"/>
+    <param name="hostname" value="$(arg hostname)" type="str"/>
+    <param name="port_number" value="$(arg port_number)" type="int"/>
+    <param name="range_frame_id" value="$(arg range_frame_id)" type="str"/>
+    <param name="ir_frame_id" value="$(arg ir_frame_id)" type="str"/>
+    <param name="point_cloud_frame_id" value="$(arg point_cloud_frame_id)" type="str"/>
+    <param name="connect_timeout" value="$(arg connect_timeout)" type="int"/>
+    <param name="send_timeout" value="$(arg send_timeout)" type="int"/>
+    <param name="receive_timeout" value="$(arg receive_timeout)" type="int"/>
+    <param name="measure_mode" value="$(arg measure_mode)" type="int"/>
+    <param name="diagnostics_enable" value="$(arg diagnostics_enable)" type="bool"/>
+  </node>
+</launch>

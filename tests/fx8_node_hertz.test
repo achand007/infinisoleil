@@ -1,0 +1,64 @@
+<launch>
+  <!-- Set target FX8 fps. (20.0, 16.0, 10.0, 4.0) -->
+  <arg name="hz" default="4.0"/>
+
+  <!-- Set FX8 measure mode. (0, 1, ...) -->
+  <arg name="set_measure_mode" default="0"/>
+
+  <!-- Set hostname -->
+  <arg name="set_hostname" default="192.168.0.80"/>
+
+  <!-- Launch fx8_node -->
+  <include file="$(find infinisoleil)/launch/fx8_node.launch">
+    <arg name="measure_mode" value="$(arg set_measure_mode)"/>
+    <arg name="hostname" value="$(arg set_hostname)"/>
+  </include>
+
+  <!-- Test publisher for range image. -->
+  <test test-name="fx8_node_range_image_hertz_test"
+        pkg="rostest"
+        type="hztest"
+        name = "hztest_fx8_range_image">
+    <param name="hz" value="$(arg hz)"/>
+    <param name="hzerror" value="3.0"/>
+    <param name="test_duration" value="8.0"/>
+    <param name="topic" value="fx8_node/range_image"/>
+    <param name="wait_time" value="15.0"/>
+  </test>
+
+  <!-- Test publisher for IR image. -->
+  <test test-name="fx8_node_ir_image_hertz_test"
+        pkg="rostest"
+        type="hztest"
+        name = "hztest_fx8_ir_image">
+    <param name="hz" value="$(arg hz)"/>
+    <param name="hzerror" value="3.0"/>
+    <param name="test_duration" value="8.0"/>
+    <param name="topic" value="fx8_node/ir_image"/>
+    <param name="wait_time" value="15.0"/>
+  </test>
+
+  <!-- Test publisher for point_cloud. -->
+  <test test-name="fx8_node_point_cloud_hertz_test"
+        pkg="rostest"
+        type="hztest"
+        name = "hztest_fx8_point_cloud">
+    <param name="hz" value="$(arg hz)"/>
+    <param name="hzerror" value="3.0"/>
+    <param name="test_duration" value="8.0"/>
+    <param name="topic" value="fx8_node/point_cloud"/>
+    <param name="wait_time" value="15.0"/>
+  </test>
+
+  <!-- Test diagnostics -->
+  <test test-name="fx8_node_diagnostics_test"
+        pkg="rostest"
+        type="hztest"
+        name = "hztest_fx8_diagnostics">
+    <param name="hz" value="1.0"/>
+    <param name="hzerror" value="0.5"/>
+    <param name="test_duration" value="8.0"/>
+    <param name="topic" value="/diagnostics"/>
+    <param name="wait_time" value="15.0"/>
+  </test>
+</launch>

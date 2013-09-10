@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package>
+  <name>infinisoleil</name>
+  <version>1.0.0</version>
+  <description>
+    This package provides a ROS driver for Infinisoleil sensors.
+  </description>
+
+  <maintainer email="3d-sensing@nippon-control-system.co.jp">
+    NCS 3D Sensing Team
+  </maintainer>
+  <author email="3d-sensing@nippon-control-system.co.jp">
+    NCS 3D Sensing Team
+  </author>
+
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/infinisoleil</url>
+  <url type="repository">
+    https://github.com/ncs-3d-sensing/infinisoleil
+  </url>
+  <url type="bugtracker">
+    https://github.com/ncs-3d-sensing/infinisoleil/issues
+  </url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>diagnostic_updater</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>nodelet</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>roslaunch</build_depend>
+  <build_depend>rostest</build_depend>
+
+  <run_depend>diagnostic_updater</run_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>nodelet</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/infinisoleil_nodelets.xml"/>
+  </export>
+</package>

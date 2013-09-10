@@ -1,0 +1,11 @@
+<!-- The driver nodelet of Infinisoleil sensors. -->
+<library path="lib/libfx8_driver">
+  <class name="infinisoleil/FX8DriverNodelet"
+         type="infinisoleil::FX8DriverNodelet"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      FX8 driver nodelet.
+    </description>
+  </class>
+</library>
+

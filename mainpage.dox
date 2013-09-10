@@ -1,0 +1,13 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+This package provides a ROS driver for Infinisoleil sensors. The driver
+accesses the sensors using the infinisoleil-lib.
+
+The driver publishes range and IR images and point cloud. The driver
+converts from received packets containing range and IR data into
+sensor_msgs/Image respectively. In addition, the driver creates
+sensor_msgs/PointCloud2 by using obtained range data and sensor
+information.
+*/
