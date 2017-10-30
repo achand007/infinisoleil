@@ -67,8 +67,8 @@ FX8DriverNodelet::~FX8DriverNodelet()
   device_running_ = false;
 
   /*
-   *  First, shut down reconfiguer server. It prevents destructor of
-   *  reconfiguer server from stopping. It occurs often at killing
+   *  First, shut down reconfigure server. It prevents destructor of
+   *  reconfigure server from stopping. It occurs often at killing
    *  nodelet manager and FX8DriverNodelet by SIGINT when these are
    *  launched by same launch file. And, this problem seems to occur
    *  at unloading FX8DriverNodelet by request of unloading it before
@@ -156,9 +156,9 @@ void FX8DriverNodelet::setupDiagnostics()
 {
   boost::mutex::scoped_lock lock(mutex_diagnostics_);
   diagnostic_updater_.reset(new diagnostic_updater::Updater());
-  diagnostic_updater_->add("Received Error Code from FX8",
+  diagnostic_updater_->add("Received Error Code from Infinisoleil",
     boost::bind(&FX8DriverNodelet::fillDiagnosticStatusByReceivedErrorCode, this, _1));
-  diagnostic_updater_->add("FX8 Error Info",
+  diagnostic_updater_->add("Infinisoleil Error Info",
     boost::bind(&FX8DriverNodelet::fillDiagnosticStatusByErrorInfo, this, _1));
 
   range_image_diagnostic_frequency_.reset(
@@ -180,13 +180,13 @@ void FX8DriverNodelet::driverThreadFunc()
   // Initialize device.
   if (!initializeDevice())
   {
-    NODELET_ERROR("Failed to initialize FX8.");
+    NODELET_ERROR("Failed to initialize Infinisoleil.");
     // Wait for publishing diagnostics.
     sleep(1);
     goto Exit;
   }
 
-  NODELET_INFO("Succeeded in initializing FX8.");
+  NODELET_INFO("Succeeded in initializing Infinisoleil.");
 
   // Start fx8 ranging.
   if (!startScan())
@@ -254,13 +254,13 @@ bool FX8DriverNodelet::initializeDevice()
   }
 
   if (diagnostics_enable_ && diagnostic_updater_)
-    diagnostic_updater_->setHardwareIDf("FX8:[%s:%d]", hostname.c_str(), port_number);
+    diagnostic_updater_->setHardwareIDf("Infinisoleil:[%s:%d]", hostname.c_str(), port_number);
 
   // Create instance.
   ret = fx8_create_handle(&device);
   if (!device || ret != FX8_ERROR_SUCCESS)
   {
-    ss << "Failed to create FX8 handle.";
+    ss << "Failed to create Infinisoleil handle.";
     goto Exit;
   }
 
@@ -276,10 +276,10 @@ bool FX8DriverNodelet::initializeDevice()
   ret = fx8_connect(device, hostname.c_str(), static_cast<unsigned short>(port_number));
   if (ret != FX8_ERROR_SUCCESS)
   {
-    ss << "Failed to connect to FX8. [" << hostname << ':' << static_cast<unsigned short>(port_number) << ']';
+    ss << "Failed to connect to Infinisoleil. [" << hostname << ':' << static_cast<unsigned short>(port_number) << ']';
     goto Exit;
   }
-  NODELET_INFO("FX8 is connected. [%s:%d]", hostname.c_str(), static_cast<unsigned short>(port_number));
+  NODELET_INFO("Infinisoleil is connected. [%s:%d]", hostname.c_str(), static_cast<unsigned short>(port_number));
 
   // Set measure mode.
   if (!setDeviceMeasureMode(device, static_cast<FX8MeasureMode>(measure_mode), &sensor_info, &xy_data))
@@ -358,7 +358,7 @@ void FX8DriverNodelet::shutdownDevice()
     device_ = FX8_INVALID_HANDLE;
     if (scan_.xy_data.surface != NULL)
       fx8_free_xy_data(&scan_.xy_data);
-    NODELET_DEBUG("FX8 closed.");
+    NODELET_DEBUG("Infinisoleil closed.");
   }
 }
 
@@ -726,19 +726,19 @@ void FX8DriverNodelet::fillDiagnosticStatusByErrorInfo(diagnostic_updater::Diagn
   boost::mutex::scoped_lock lock(mutex_diagnostics_);
   if (error_info_.empty())
   {
-    status.summaryf(diagnostic_msgs::DiagnosticStatus::OK, "No FX8 Error Info");
+    status.summaryf(diagnostic_msgs::DiagnosticStatus::OK, "No Infinisoleil Error Info");
     return;
   }
 
   char key_buf[256];
 
-  status.summaryf(diagnostic_msgs::DiagnosticStatus::ERROR, "FX8 Error Info");
+  status.summaryf(diagnostic_msgs::DiagnosticStatus::ERROR, "Infinisoleil Error Info");
   while(!error_info_.empty())
   {
     std::vector<ErrorInfo>::iterator error_info_it = error_info_.begin();
     sprintf(key_buf, "%.lf", error_info_it->first.toSec());
     status.add(key_buf, error_info_it->second.c_str()); 
-    NODELET_DEBUG("FX8 Error Information.[%s:%s]", key_buf, error_info_it->second.c_str());
+    NODELET_DEBUG("Infinisoleil Error Information.[%s:%s]", key_buf, error_info_it->second.c_str());
     error_info_.erase(error_info_it);
   }
 }
@@ -749,7 +749,7 @@ void FX8DriverNodelet::fillDiagnosticStatusByReceivedErrorCode(
   boost::mutex::scoped_lock lock(mutex_diagnostics_);
   if (error_code_.empty())
   {
-    status.summaryf(diagnostic_msgs::DiagnosticStatus::OK, "No FX8 Received Error Code");
+    status.summaryf(diagnostic_msgs::DiagnosticStatus::OK, "No Infinisoleil Received Error Code");
     return;
   }
 
@@ -779,11 +779,11 @@ void FX8DriverNodelet::fillDiagnosticStatusByReceivedErrorCode(
 
     if (condition & 0xC000)
     {
-      NODELET_WARN("Received FX8 Error Code.[%s:%s]", key_buf, value_buf);
+      NODELET_WARN("Received Infinisoleil Error Code.[%s:%s]", key_buf, value_buf);
     }
     else
     {
-      NODELET_ERROR("Received FX8 Error Code.[%s:%s]", key_buf, value_buf);
+      NODELET_ERROR("Received Infinisoleil Error Code.[%s:%s]", key_buf, value_buf);
       is_warn = false;
     }
     error_code_.erase(error_code_it);
@@ -791,11 +791,11 @@ void FX8DriverNodelet::fillDiagnosticStatusByReceivedErrorCode(
 
   if (is_warn)
   {
-    status.summaryf(diagnostic_msgs::DiagnosticStatus::WARN, "FX8 Received Error Code");
+    status.summaryf(diagnostic_msgs::DiagnosticStatus::WARN, "Infinisoleil Received Error Code");
   }
   else
   {
-    status.summaryf(diagnostic_msgs::DiagnosticStatus::ERROR, "FX8 Received Error Code");
+    status.summaryf(diagnostic_msgs::DiagnosticStatus::ERROR, "Infinisoleil Received Error Code");
   }
 }
 
@@ -822,7 +822,7 @@ void FX8DriverNodelet::reconfigureFX8Callback(FX8Config config, uint32_t level)
   // Check connection to FX8.
   if (!fx8_get_connected(device_))
   {
-    NODELET_WARN("Failed to reconfigure. FX8 is disconnected.");
+    NODELET_WARN("Failed to reconfigure. Infinisoleil is disconnected.");
     return;
   }
 
