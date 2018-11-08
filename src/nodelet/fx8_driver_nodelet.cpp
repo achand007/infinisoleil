@@ -644,6 +644,13 @@ sensor_msgs::PointCloud2Ptr FX8DriverNodelet::createPointCloudMessage()
   msg->fields[2].offset = 8;
   msg->fields[2].datatype = 7;
   msg->fields[2].count = 1;
+
+  // Add intensity field
+  msg->fields[3].name = "intensity";
+  msg->fields[3].offset = 12;
+  msg->fields[3].datatype = 7;
+  msg->fields[3].count = 1;
+
   msg->point_step = sizeof(float) * msg->fields.size();
   msg->row_step = msg->width * msg->point_step;
   msg->data.resize(msg->height * msg->row_step);
